@@ -52,6 +52,7 @@ public class AuthController {
         return Jwts
                 .builder()
                 .setSubject(user.getEmail())
+                .claim("userId", user.getId())
                 .claim("isAdmin", user.isAdmin())
                 .claim("firstName", user.getFirstName())
                 .claim("lastName", user.getLastName())

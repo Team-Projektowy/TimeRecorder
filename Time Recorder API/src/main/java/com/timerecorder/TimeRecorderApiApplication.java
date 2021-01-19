@@ -33,7 +33,7 @@ public class TimeRecorderApiApplication {
     public FilterRegistrationBean<JwtFilter> userSignedInFilter() {
         FilterRegistrationBean<JwtFilter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new JwtFilter(this.environment.getProperty("jwt.secret")));
-        filterRegistrationBean.setUrlPatterns(Collections.singleton("/home"));
+        filterRegistrationBean.setUrlPatterns(Collections.singleton("/time-records"));
         return filterRegistrationBean;
     }
 

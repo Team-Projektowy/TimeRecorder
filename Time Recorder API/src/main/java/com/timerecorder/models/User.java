@@ -1,11 +1,13 @@
 package com.timerecorder.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -41,6 +43,10 @@ public class User {
 
     @NotNull
     private boolean isAdmin;
+
+    @OneToMany(mappedBy = "user")
+    @JsonBackReference
+    private List<TimeRecord> timeRecords;
 
     public Integer getId() {
         return id;
@@ -104,5 +110,9 @@ public class User {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    public List<TimeRecord> getTimeRecords() {
+        return timeRecords;
     }
 }

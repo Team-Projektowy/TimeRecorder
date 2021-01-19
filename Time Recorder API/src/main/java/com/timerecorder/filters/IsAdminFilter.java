@@ -37,8 +37,6 @@ public class IsAdminFilter implements javax.servlet.Filter{
                         .parser()
                         .setSigningKey(jwtSecret)
                         .parseClaimsJws(token).getBody();
-                System.out.println((boolean)claims.get("isAdmin"));
-                System.out.println(claims.get("isAdmin"));
                 if (!(boolean)claims.get("isAdmin")) {
                     httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "You don't have access to this resource");
                     return;
