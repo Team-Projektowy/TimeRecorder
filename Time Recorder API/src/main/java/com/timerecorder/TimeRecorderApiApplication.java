@@ -1,6 +1,7 @@
 package com.timerecorder;
 
-import com.timerecorder.fitlers.JwtFilter;
+import com.timerecorder.filters.IsAdminFilter;
+import com.timerecorder.filters.JwtFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -27,11 +28,21 @@ public class TimeRecorderApiApplication {
         return new BCryptPasswordEncoder();
     }
 
+//    //Checks if user is logged int
     @Bean
-    public FilterRegistrationBean<JwtFilter> filterRegistrationBean() {
+    public FilterRegistrationBean<JwtFilter> userSignedInFilter() {
         FilterRegistrationBean<JwtFilter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new JwtFilter(this.environment.getProperty("jwt.secret")));
         filterRegistrationBean.setUrlPatterns(Collections.singleton("/home"));
+        return filterRegistrationBean;
+    }
+
+    //Checks if user is logged int and is admin
+    @Bean
+    public FilterRegistrationBean<IsAdminFilter> userIsAdminFilter() {
+        FilterRegistrationBean<IsAdminFilter> filterRegistrationBean = new FilterRegistrationBean<>();
+        filterRegistrationBean.setFilter(new IsAdminFilter(this.environment.getProperty("jwt.secret")));
+        filterRegistrationBean.setUrlPatterns(Collections.singleton("/tasks"));
         return filterRegistrationBean;
     }
 }
