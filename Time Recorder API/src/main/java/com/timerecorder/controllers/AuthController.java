@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.Date;
 
 @RestController
@@ -26,7 +27,11 @@ public class AuthController {
     }
 
     @PostMapping(path="/register")
-    public User register (@RequestBody User user) {
+    public User register (@Valid @RequestBody User user) {
+        if (userRepository.findFirstByEmail(user.getEmail()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with provided email already exists");
+        }
+
         String hash = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(hash);
         return userRepository.save(user);
@@ -34,11 +39,10 @@ public class AuthController {
 
     @PostMapping(path="/login")
     public String login (@RequestBody ObjectNode json) {
-        System.out.println(env.getProperty("jwt.secret"));
         String email = json.get("email").textValue();
         String password = json.get("password").textValue();
 
-        User user = userRepository.findFirstByEmail(email);
+        User user = userRepository.findFirstByEmail(email).orElse(null);
 
         if (user == null || !bCryptPasswordEncoder.matches(password, user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect credentials");

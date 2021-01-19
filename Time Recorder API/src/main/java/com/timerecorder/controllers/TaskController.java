@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.Optional;
 
 
@@ -36,7 +37,7 @@ public class TaskController {
     }
 
     @PostMapping
-    public Task create(@RequestBody Task task, HttpServletResponse response) {
+    public Task create(@Valid @RequestBody Task task, HttpServletResponse response) {
         if(taskRepository.findTaskByName(task.getName()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task of that name already exists.");
         }
@@ -47,7 +48,7 @@ public class TaskController {
     }
 
     @PutMapping(path = "/{taskId}")
-    public Task edit(@PathVariable Integer taskId, @RequestBody Task task) {
+    public Task edit(@PathVariable Integer taskId, @Valid @RequestBody Task task) {
         Optional<Task> curTask = taskRepository.findById(taskId);
         if (curTask.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");

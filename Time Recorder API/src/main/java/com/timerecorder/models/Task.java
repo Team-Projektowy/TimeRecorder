@@ -12,7 +12,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Size(max = 255)
+    @Size(min = 1, max = 255)
     @NotNull
     @Column(unique = true)
     private String name;
