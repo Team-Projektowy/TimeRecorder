@@ -1,13 +1,11 @@
 package com.timerecorder.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
-//@JsonIgnoreProperties( { "password" })
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
