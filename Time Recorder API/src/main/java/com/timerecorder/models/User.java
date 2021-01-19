@@ -3,6 +3,9 @@ package com.timerecorder.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -11,20 +14,32 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @Size(max = 255)
     @Column(unique = true)
+    @NotNull
     private String email;
 
+    @Size(max = 255)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotNull
     private String password;
 
+    @Size(max = 255)
+    @NotNull
     private String firstName;
 
+    @Size(max = 255)
     private String lastName;
 
+    @Size(max = 255)
+    @NotNull
     private String position;
 
+    @Column(scale = 2)
+    @Max(value = 99)
     private short hoursAWeek;
 
+    @NotNull
     private boolean isAdmin;
 
     public Integer getId() {
