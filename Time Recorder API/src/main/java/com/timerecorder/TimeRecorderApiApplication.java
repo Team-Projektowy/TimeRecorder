@@ -9,12 +9,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.Collections;
-
 @SpringBootApplication
 public class TimeRecorderApiApplication {
 
     private final Environment environment;
+
     public TimeRecorderApiApplication(Environment env) {
         this.environment = env;
     }
@@ -28,12 +27,15 @@ public class TimeRecorderApiApplication {
         return new BCryptPasswordEncoder();
     }
 
-//    //Checks if user is logged int
+    //Checks if user is logged int
     @Bean
     public FilterRegistrationBean<JwtFilter> userSignedInFilter() {
         FilterRegistrationBean<JwtFilter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new JwtFilter(this.environment.getProperty("jwt.secret")));
-        filterRegistrationBean.setUrlPatterns(Collections.singleton("/time-records"));
+        filterRegistrationBean.addUrlPatterns(
+                "/time-records/*",
+                "/users/*"
+        );
         return filterRegistrationBean;
     }
 
@@ -42,7 +44,9 @@ public class TimeRecorderApiApplication {
     public FilterRegistrationBean<IsAdminFilter> userIsAdminFilter() {
         FilterRegistrationBean<IsAdminFilter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new IsAdminFilter(this.environment.getProperty("jwt.secret")));
-        filterRegistrationBean.setUrlPatterns(Collections.singleton("/tasks"));
+        filterRegistrationBean.addUrlPatterns(
+                "/tasks/*"
+        );
         return filterRegistrationBean;
     }
 }
