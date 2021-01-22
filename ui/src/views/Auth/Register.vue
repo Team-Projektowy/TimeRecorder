@@ -83,7 +83,7 @@
                     password: "",
                     position: "",
                     hoursAWeek: null,
-                    isAdmin: 0,
+                    admin: 0,
                 },
                 submitStatus: null
             }
@@ -117,7 +117,7 @@
                     maxValue: maxValue(99),
                     minValue: minValue(0),
                 },
-                isAdmin: {
+                admin: {
                     required,
                     integer,
                     maxValue: maxValue(1),
@@ -131,11 +131,13 @@
                     this.submitStatus = 'ERROR'
                 }
                 else {
-                    this.$http.post(this.$serverUrl + '/register', this.credential).then(result => {
-                        if (result.status === 200) {
-                            this.$router.push({ name: "Home" });
-                        }
-                    });
+                    this.$http.post(this.$serverUrl + '/register', this.credential)
+                        .then(result => {
+                          if (result.status === 200) {
+                              this.$router.push({ name: "Home" });
+                          }
+                        })
+                        .catch(err => console.log(err.message));
                 }
             },
         }
