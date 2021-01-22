@@ -1,10 +1,12 @@
 package com.timerecorder.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -21,7 +23,7 @@ public class User {
     @NotNull
     private String email;
 
-    @Size(max = 255)
+    @Size(min = 8, max = 255)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotNull
     private String password;
@@ -39,13 +41,14 @@ public class User {
 
     @Column(scale = 2)
     @Max(value = 99)
+    @Min(value = 0)
     private short hoursAWeek;
 
     @NotNull
     private boolean isAdmin;
 
     @OneToMany(mappedBy = "user")
-    @JsonBackReference
+    @JsonIgnore
     private List<TimeRecord> timeRecords;
 
     public Integer getId() {

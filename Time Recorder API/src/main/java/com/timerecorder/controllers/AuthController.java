@@ -1,6 +1,7 @@
 package com.timerecorder.controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.timerecorder.models.TokenAPI;
 import com.timerecorder.models.User;
 import com.timerecorder.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
@@ -38,7 +39,7 @@ public class AuthController {
     }
 
     @PostMapping(path="/login")
-    public String login (@RequestBody ObjectNode json) {
+    public TokenAPI login (@RequestBody ObjectNode json) {
         String email = json.get("email").textValue();
         String password = json.get("password").textValue();
 
@@ -49,7 +50,7 @@ public class AuthController {
         }
 
         long currentTimeMilis = System.currentTimeMillis();
-        return Jwts
+        String token = Jwts
                 .builder()
                 .setSubject(user.getEmail())
                 .claim("userId", user.getId())
@@ -62,5 +63,7 @@ public class AuthController {
                 .setExpiration(new Date(currentTimeMilis + 7200000))
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("jwt.secret"))
                 .compact();
+
+        return new TokenAPI(token, user);
     }
 }

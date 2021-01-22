@@ -1,6 +1,7 @@
 package com.timerecorder.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -18,7 +19,7 @@ public class TimeRecord {
     @ManyToOne
     @JoinColumn(name = "user_id")
     @NotNull
-    @JsonManagedReference
+    @JsonIgnore
     private User user;
 
     @ManyToOne
