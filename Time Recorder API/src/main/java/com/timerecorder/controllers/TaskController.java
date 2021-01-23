@@ -1,11 +1,13 @@
 package com.timerecorder.controllers;
 
+import com.timerecorder.helpers.requestProcessingHelper;
 import com.timerecorder.models.Task;
 import com.timerecorder.repositories.TaskRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Optional;
@@ -27,7 +29,9 @@ public class TaskController {
     }
 
     @GetMapping(path = "/{taskId}")
-    public Task getById(@PathVariable Integer taskId) {
+    public Task getById(@PathVariable Integer taskId, HttpServletRequest request) {
+        requestProcessingHelper.throwUnauthorizedIfRequesterIsNotAdmin(request);
+
         Optional<Task> task = taskRepository.findById(taskId);
         if (task.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
@@ -37,7 +41,9 @@ public class TaskController {
     }
 
     @PostMapping
-    public Task create(@Valid @RequestBody Task task, HttpServletResponse response) {
+    public Task create(@Valid @RequestBody Task task, HttpServletRequest request, HttpServletResponse response) {
+        requestProcessingHelper.throwUnauthorizedIfRequesterIsNotAdmin(request);
+
         if(taskRepository.findTaskByName(task.getName()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task of that name already exists.");
         }
@@ -48,7 +54,9 @@ public class TaskController {
     }
 
     @PutMapping(path = "/{taskId}")
-    public Task edit(@PathVariable Integer taskId, @Valid @RequestBody Task task) {
+    public Task edit(@PathVariable Integer taskId, @Valid @RequestBody Task task, HttpServletRequest request) {
+        requestProcessingHelper.throwUnauthorizedIfRequesterIsNotAdmin(request);
+
         Optional<Task> curTask = taskRepository.findById(taskId);
         if (curTask.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
@@ -60,8 +68,9 @@ public class TaskController {
     }
 
     @DeleteMapping(path = "/{taskId}")
-    public void delete(@PathVariable Integer taskId) {
-        System.out.println(taskId);
+    public void delete(@PathVariable Integer taskId, HttpServletRequest request) {
+        requestProcessingHelper.throwUnauthorizedIfRequesterIsNotAdmin(request);
+
         Optional<Task> task = taskRepository.findById(taskId);
         if (task.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
