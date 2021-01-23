@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from '../views/Home'
 import Login from "../views/Auth/Login";
 import Register from "../views/Auth/Register";
+import Admin from '../views/Admin';
 import store from '../store/index';
+import Error from "../views/Error/Error";
 
 Vue.use(VueRouter)
 
@@ -39,6 +41,18 @@ const routes = [
     name: 'Register',
     component: Register,
     beforeEnter: ifAuthenticated
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: Admin,
+    beforeEnter: (to, from, next) => {
+      if (store.getters.isLogged && store.getters.user.admin) {
+        next();
+      } else {
+        next("/error/403");
+      }
+    }
   },
   {
     path: "/error/:code",

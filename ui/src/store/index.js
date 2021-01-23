@@ -16,13 +16,13 @@ const state = {
 
 const getters = {
   isLogged: state => state.logged,
-  user: state => state.user,
+  user: state => JSON.parse(state.user),
 };
 
 const actions = {
   login({ commit }, user) {
     commit(types.LOGIN);
-    localStorage.setItem('user', user);
+    localStorage.setItem('user', JSON.stringify(user));
     router.push({ path: '/' });
   },
 
