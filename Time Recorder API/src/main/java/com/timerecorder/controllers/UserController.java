@@ -29,6 +29,11 @@ public class UserController {
         this.timeRecordRepository = timeRecordRepository;
     }
 
+    @GetMapping
+    public Iterable<User> getAll() {
+        return userRepository.findAll();
+    }
+
     @GetMapping("/{userId}/time-records")
     public Iterable<TimeRecord> getTimeRecords(
             @PathVariable Integer userId,

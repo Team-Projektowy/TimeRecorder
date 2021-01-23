@@ -46,7 +46,8 @@ public class TimeRecorderApiApplication {
         filterRegistrationBean.setFilter(new IsAdminFilter(this.environment.getProperty("jwt.secret")));
         filterRegistrationBean.addUrlPatterns(
                 "/tasks/*",
-                "/register"
+                "/register",
+                "/users"
         );
         return filterRegistrationBean;
     }
