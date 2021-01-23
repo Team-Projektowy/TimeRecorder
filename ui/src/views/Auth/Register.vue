@@ -52,16 +52,16 @@
                         <div class="text-danger" v-if="!$v.credential.hoursAWeek.maxValue">Liczba godzin tygodniowo nie może być większa niż 99</div>
                       </div>
                     </div>
-<!--                    <div class="form-group">-->
-<!--                      <label for="isAdmin">Administrator</label>-->
-<!--                      <input v-model.trim="$v.credential.isAdmin.$model" :class="{ 'border-danger': $v.credential.isAdmin.$error }" id="isAdmin" class="form-control" type="">-->
-<!--                      <div v-if="$v.credential.hoursAWeek.$error">-->
-<!--                        <div class="text-danger" v-if="!$v.credential.hoursAWeek.required">Liczba godzin tygodniowo jest wymagana.</div>-->
-<!--                        <div class="text-danger" v-if="!$v.credential.hoursAWeek.integer">Liczba godzin tygodniowo musi być liczbą</div>-->
-<!--                        <div class="text-danger" v-if="!$v.credential.hoursAWeek.minValue">Liczba godzin tygodniowo nie może być mniejsza niż 0</div>-->
-<!--                        <div class="text-danger" v-if="!$v.credential.hoursAWeek.maxValue">Liczba godzin tygodniowo nie może być większa niż 99</div>-->
-<!--                      </div>-->
-<!--                    </div>-->
+                    <div class="form-group text-left w-100">
+                      <b-form-checkbox
+                          v-model="credential.admin"
+                          value="true"
+                          unchecked-value="false"
+                      >
+                        Administrator
+                      </b-form-checkbox>
+                    </div>
+
                 <div class="mt-3 text-center">
                     <b-button @click="register" variant="outline-primary" block squared>Zarejestruj użytkownika</b-button>
                     <p class="mt-3 text-danger" v-if="submitStatus === 'ERROR'">Proszę wypełnić poprawnie.</p>
@@ -83,7 +83,7 @@
                     password: "",
                     position: "",
                     hoursAWeek: null,
-                    admin: 0,
+                    admin: false,
                 },
                 submitStatus: null
             }
@@ -119,9 +119,7 @@
                 },
                 admin: {
                     required,
-                    integer,
-                    maxValue: maxValue(1),
-                    minValue: minValue(0),
+                    boolean: val => val === "true" || val === "false",
                 }
             }
         },
