@@ -21,6 +21,7 @@ Vue.http.interceptors.push((request, next) => {
   next(response => {
     const statusCode = response.status;
     if (statusCode === 401) {
+      store.dispatch('logout');
       router.push({ name: "Login" });
       return;
     }
