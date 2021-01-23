@@ -1,6 +1,7 @@
 package com.timerecorder.filters;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
 import javax.servlet.FilterChain;
@@ -39,6 +40,9 @@ public class JwtFilter implements javax.servlet.Filter {
                 servletRequest.setAttribute("claims", claims);
             } catch (final SignatureException e) {
                 httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Incorrect bearer token");
+                return;
+            } catch (final ExpiredJwtException e) {
+                httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Bearer token expired");
                 return;
             }
         }
