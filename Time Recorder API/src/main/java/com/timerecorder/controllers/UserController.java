@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @RestController
@@ -38,7 +39,8 @@ public class UserController {
     @GetMapping("/{userId}/time-records")
     public Iterable<TimeRecord> getTimeRecords(
             @PathVariable Integer userId,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startingDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endingDate,
             @RequestParam(required = false) Integer taskId,
             HttpServletRequest httpServletRequest) {
 
@@ -52,9 +54,8 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
-        if (taskId == null && date == null) {
-            return timeRecordRepository.findAllByUser(user);
-        }
+        LocalDateTime startingDateTime = startingDate.atStartOfDay();
+        LocalDateTime endingDateTime = endingDate.atTime(LocalTime.MAX);
 
         if (taskId != null) {
             Task task = taskRepository.findById(taskId).orElse(null);
@@ -62,18 +63,16 @@ public class UserController {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
             }
 
-            if (date == null) {
-                return timeRecordRepository.findAllByUserAndTask(user, task);
-            }
-            return timeRecordRepository.findAllByUserAndTaskAndStartingTimeBetween(user, task, date.atStartOfDay(), date.atTime(LocalTime.MAX));
+            return timeRecordRepository.findAllByUserAndTaskAndStartingTimeBetweenOrderByStartingTime(user, task, startingDateTime, endingDateTime);
         }
 
-        return timeRecordRepository.findAllByUserAndStartingTimeBetween(user, date.atStartOfDay(), date.atTime(LocalTime.MAX));
+        return timeRecordRepository.findAllByUserAndStartingTimeBetweenOrderByStartingTime(user, startingDateTime, endingDateTime);
     }
 
     @GetMapping("/me/time-records")
     public Iterable<TimeRecord> getCurUserTimeRecords(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startingDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endingDate,
             @RequestParam(required = false) Integer taskId,
             HttpServletRequest httpServletRequest) {
 
@@ -89,9 +88,8 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
-        if (taskId == null && date == null) {
-            return timeRecordRepository.findAllByUser(user);
-        }
+        LocalDateTime startingDateTime = startingDate.atStartOfDay();
+        LocalDateTime endingDateTime = endingDate.atTime(LocalTime.MAX);
 
         if (taskId != null) {
             Task task = taskRepository.findById(taskId).orElse(null);
@@ -99,12 +97,9 @@ public class UserController {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found");
             }
 
-            if (date == null) {
-                return timeRecordRepository.findAllByUserAndTask(user, task);
-            }
-            return timeRecordRepository.findAllByUserAndTaskAndStartingTimeBetween(user, task, date.atStartOfDay(), date.atTime(LocalTime.MAX));
+            return timeRecordRepository.findAllByUserAndTaskAndStartingTimeBetweenOrderByStartingTime(user, task, startingDateTime, endingDateTime);
         }
 
-        return timeRecordRepository.findAllByUserAndStartingTimeBetween(user, date.atStartOfDay(), date.atTime(LocalTime.MAX));
+        return timeRecordRepository.findAllByUserAndStartingTimeBetweenOrderByStartingTime(user, startingDateTime, endingDateTime);
     }
 }
