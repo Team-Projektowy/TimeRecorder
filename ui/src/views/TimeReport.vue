@@ -17,7 +17,7 @@
     </div>
 
     <div class="text-center">
-      <b-button variant="primary" @click="fetchTimeRecords" class="mb-4">Szukaj</b-button>
+      <b-button variant="primary" squared @click="fetchTimeRecords" class="mb-4">Szukaj</b-button>
       <div v-show="validationMessage" class="text-danger">{{ validationMessage }}</div>
     </div>
 
