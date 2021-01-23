@@ -9,6 +9,7 @@
         <b-navbar-nav class="ml-auto">
           <b-nav-item v-if="user && user.admin" to="/time-report">Raport czasu</b-nav-item>
           <b-nav-item v-if="user && user.admin" to="/register">Rejestruj</b-nav-item>
+          <b-nav-item v-if="user && user.admin" to="/tasks">Zadania</b-nav-item>
           <b-nav-item v-if="isLogged" @click="logout">Wyloguj</b-nav-item>
         </b-navbar-nav>
       </b-collapse>
