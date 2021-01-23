@@ -3,9 +3,9 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home/Index'
 import Login from "../views/Auth/Login";
 import Register from "../views/Auth/Register";
-import Admin from '../views/Admin';
 import store from '../store/index';
 import Error from "../views/Error/Error";
+import TimeReport from "../views/TimeReport";
 
 Vue.use(VueRouter)
 
@@ -43,9 +43,9 @@ const routes = [
     beforeEnter: ifAuthenticated
   },
   {
-    path: '/admin',
-    name: 'Admin',
-    component: Admin,
+    path: '/time-report',
+    name: 'TimeReport',
+    component: TimeReport,
     beforeEnter: (to, from, next) => {
       if (store.getters.isLogged && store.getters.user.admin) {
         next();

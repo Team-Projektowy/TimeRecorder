@@ -1,27 +1,31 @@
 <template>
   <div class="container">
     <div class="row mb-4">
-      <div class="col-sm-6">
+      <div class="col-sm-4">
         <b-form-select v-model="selectedUserId" :options="usersOptions">
           <template #first>
             <b-form-select-option :value="null" disabled>-- Wybierz pracownika --</b-form-select-option>
           </template>
         </b-form-select>
       </div>
-      <div class="col-sm-6">
-          <b-form-datepicker id="datepicker" v-model="selectedDate" placeholder="-- Wybierz datę --"></b-form-datepicker>
+      <div class="col-sm-4">
+          <b-form-datepicker v-model="selectedStartingDate" placeholder="-- Wybierz datę początkową --"></b-form-datepicker>
+      </div>
+      <div class="col-sm-4">
+        <b-form-datepicker v-model="selectedEndingDate" placeholder="-- Wybierz datę końcową --"></b-form-datepicker>
       </div>
     </div>
     <b-button variant="primary" @click="fetchTimeRecords" class="mb-4">Szukaj</b-button>
     <div v-show="validationMessage" class="text-danger">{{ validationMessage }}</div>
     <div class="mt-5">
-      <h3 class="mb-3" v-if="currentlyFetchedUser && currentlyFetchedDate">{{ `(${currentlyFetchedUser.id}) ${currentlyFetchedUser.firstName} ${currentlyFetchedUser.lastName}, ${currentlyFetchedUser.position} - ${selectedDate}`}}</h3>
+      <h3 class="mb-3" v-if="currentlyFetchedUser && currentlyFetchedStartingDate && currentlyFetchedEndingDate">{{ `(${currentlyFetchedUser.id}) ${currentlyFetchedUser.firstName} ${currentlyFetchedUser.lastName}, ${currentlyFetchedUser.position}, ${selectedStartingDate} - ${selectedEndingDate}`}}</h3>
       <h4 v-show="noTimeRecordsFound" class="text-danger">Nie znaleziono żadnych wyników</h4>
       <b-table v-if="timeRecordsFormatted.length > 0" striped hover :fields="tableFields" :items="timeRecordsFormatted">
         <template #cell(task)="data">
           <span v-b-tooltip.hover :title="data.value.description">{{ data.value.name }}</span>
         </template>
         <template #custom-foot>
+          <td></td>
           <td></td>
           <td></td>
           <td class="font-weight-bold">{{ timeDifferenceSum }}</td>
@@ -35,33 +39,44 @@
 
 <script>
 export default {
-  name: "Admin",
+  name: "TimeReport",
   data() {
     return {
       selectedUserId: null,
       users: [],
-      selectedDate: null,
+      selectedStartingDate: null,
+      selectedEndingDate: null,
       validationMessage: null,
       timeRecords: [],
       noTimeRecordsFound: false,
       currentlyFetchedUser: null,
-      currentlyFetchedDate: null,
+      currentlyFetchedStartingDate: null,
+      currentlyFetchedEndingDate: null,
       tableFields: [
+        {
+          key: "date",
+          label: "Data",
+          sortable: true,
+        },
         {
           key: "startingTime",
           label: "Czas rozpoczęcia",
+          sortable: true,
         },
         {
           key: "endingTime",
           label: "Czas zakończenia",
+          sortable: true,
         },
         {
           key: "length",
           label: "Długość",
+          sortable: true,
         },
         {
           key: "task",
           label: "Czynność",
+          sortable: true,
         },
         {
           key: "description",
@@ -88,6 +103,7 @@ export default {
     timeRecordsFormatted: function () {
       return this.timeRecords.map(timeRecord => {
         return {
+          date: timeRecord.startingTime.substring(0, 11),
           startingTime: timeRecord.startingTime.substring(11, 16),
           endingTime: timeRecord.endingTime.substring(11, 16),
           length: this.calculateTimeDifference(timeRecord.startingTime, timeRecord.endingTime),
@@ -101,12 +117,12 @@ export default {
       this.timeRecords.forEach(timeRecord => {
         sum += (new Date(Date.parse(timeRecord.endingTime)) - new Date(Date.parse(timeRecord.startingTime)));
       })
-      sum /= 1000;
-      let hours = Math.floor(sum/3600).toString();
+      minutes = Math.ceil(sum / 60000);
+      let hours = Math.floor(minutes / 60).toString();
       if (hours.length === 1) {
         hours = "0" + hours;
       }
-      let minutes = Math.ceil((sum - sum/3600)/60).toString();
+      let minutes = (minutes % 60).toString();
       if (minutes.length === 1) {
         minutes = "0" + minutes;
       }
@@ -115,16 +131,17 @@ export default {
   },
   methods: {
     fetchTimeRecords() {
-      if (!this.selectedUserId && !this.selectedDate) {
+      if (!this.selectedUserId && !this.selectedStartingDate && !this.selectedEndingDate) {
         this.validationMessage = "Proszę wybrać pracownika i datę";
       } else if (!this.selectedUserId) {
         this.validationMessage = "Proszę wybrać pracownika";
-      } else if (!this.selectedDate) {
+      } else if (!this.selectedStartingDate) {
         this.validationMessage = "Proszę wybrać datę";
       } else {
-        this.$http.get(`${this.$serverUrl}/users/${this.selectedUserId}/time-records?date=${this.selectedDate}`)
+        this.$http.get(`${this.$serverUrl}/users/${this.selectedUserId}/time-records?startingDate=${this.selectedStartingDate}&endingDate=${this.selectedEndingDate}`)
             .then(res => {
-              this.currentlyFetchedDate = this.selectedDate;
+              this.currentlyFetchedStartingDate = this.selectedStartingDate;
+              this.currentlyFetchedEndingDate = this.selectedEndingDate;
               this.currentlyFetchedUser = this.users.find(user => user.id === this.selectedUserId);
               this.timeRecords = res.body;
               this.noTimeRecordsFound = this.timeRecords.length === 0;
