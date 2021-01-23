@@ -15,9 +15,13 @@
         <b-form-datepicker v-model="selectedEndingDate" placeholder="-- Wybierz datę końcową --"></b-form-datepicker>
       </div>
     </div>
-    <b-button variant="primary" @click="fetchTimeRecords" class="mb-4">Szukaj</b-button>
-    <div v-show="validationMessage" class="text-danger">{{ validationMessage }}</div>
-    <div class="mt-5">
+
+    <div class="text-center">
+      <b-button variant="primary" @click="fetchTimeRecords" class="mb-4">Szukaj</b-button>
+      <div v-show="validationMessage" class="text-danger">{{ validationMessage }}</div>
+    </div>
+
+    <div class="mt-4 text-center">
       <h3 class="mb-3" v-if="currentlyFetchedUser && currentlyFetchedStartingDate && currentlyFetchedEndingDate">{{ `(${currentlyFetchedUser.id}) ${currentlyFetchedUser.firstName} ${currentlyFetchedUser.lastName}, ${currentlyFetchedUser.position}, ${selectedStartingDate} - ${selectedEndingDate}`}}</h3>
       <h4 v-show="noTimeRecordsFound" class="text-danger">Nie znaleziono żadnych wyników</h4>
       <b-table v-if="timeRecordsFormatted.length > 0" striped hover :fields="tableFields" :items="timeRecordsFormatted">
