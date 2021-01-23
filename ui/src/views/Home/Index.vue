@@ -74,6 +74,7 @@ export default {
                     this.timeRecord.description = "";
                     this.timeRecord.startingTime = null;
                     alert("Udało się zapisać");
+                    this.fetchUserTimeRecords();
                     })
         },
     },
