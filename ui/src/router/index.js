@@ -6,6 +6,9 @@ import Register from "../views/Auth/Register";
 import store from '../store/index';
 import Error from "../views/Error/Error";
 import TimeReport from "../views/TimeReport";
+import TasksAll from "../views/Tasks/TasksAll";
+import TaskEdit from "../views/Tasks/TaskEdit";
+import TaskCreate from "../views/Tasks/TaskCreate";
 
 Vue.use(VueRouter)
 
@@ -54,6 +57,24 @@ const routes = [
     path: '/time-report',
     name: 'TimeReport',
     component: TimeReport,
+    beforeEnter: ifAdmin
+  },
+  {
+    path: '/tasks',
+    name: 'TasksAll',
+    component: TasksAll,
+    beforeEnter: ifAdmin
+  },
+  {
+    path: '/tasks/create',
+    name: 'TaskCreate',
+    component: TaskCreate,
+    beforeEnter: ifAdmin
+  },
+  {
+    path: '/tasks/:taskId/edit',
+    name: 'TaskEdit',
+    component: TaskEdit,
     beforeEnter: ifAdmin
   },
   {
