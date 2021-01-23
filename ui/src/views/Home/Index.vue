@@ -15,6 +15,7 @@
             <b-button variant="danger" v-on:click="clickStop" v-if="timeRecord.startingTime">
                 Stop
             </b-button>
+            
         </div>
     </div>
 </template>
@@ -26,6 +27,7 @@ export default {
     data() {
         return {
             tasks: [],
+            userTimeRecords: [],
             timeRecord: {
                 startingTime: null,
                 endingTime: null,
@@ -45,6 +47,11 @@ export default {
                 });
             });
         },
+        fetchUserTimeRecords(){
+            this.$http.get(`${this.$serverUrl}/users/${JSON.parse(localStorage.getItem('user')).id}/time-records?startingDate=${new Date().toISOString().substring(0,10)}&endingDate=${new Date().toISOString().substring(0,10)}`)
+            .then((response) => {this.userTimeRecords = response.data; console.log(this.userTimeRecords);})
+
+        },
         clickStart() {
             if (this.timeRecord.taskId === null) {
                 alert("Wybierz jakie zadanie wykonujesz");
@@ -58,13 +65,19 @@ export default {
             this.timeRecord.endingTime = currentTime;
             console.log(this.timeRecord);
             this.$http.post(this.$serverUrl + "/time-records", this.timeRecord)
-                .then((err) => {console.log(err);})
-                .then(()=>alert("Udało się zapisać"))
-                .then(() => {location.reload();});
+                .then((response) => {
+                    console.log(response);
+                    this.timeRecord.startingTime = null;
+                    this.timeRecord.endingTime = null;
+                    this.timeRecord.description = "";
+                    this.timeRecord.startingTime = null;
+                    alert("Udało się zapisać");
+                    })
         },
     },
     mounted() {
         this.fetchTasks();
+        this.fetchUserTimeRecords();
     },
 };
 </script>
