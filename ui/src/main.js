@@ -14,6 +14,11 @@ Vue.use(VueResource);
 Vue.use(Vuelidate);
 
 Vue.http.interceptors.push((request, next) => {
+  if (request.url.split("/").pop() === "login") {
+    next();
+    return;
+  }
+
   if (localStorage.getItem('token')) {
     request.headers.set('Authorization', 'Bearer ' + localStorage.getItem('token'));
   }

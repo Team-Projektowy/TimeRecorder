@@ -21,9 +21,9 @@ const getters = {
 
 const actions = {
   login({ commit }, params) {
-    commit(types.LOGIN);
     localStorage.setItem('token', params.token);
     localStorage.setItem('user', JSON.stringify(params.user));
+    commit(types.LOGIN);
     router.push({ path: '/' });
   },
 
@@ -37,9 +37,11 @@ const actions = {
 const mutations = {
   [types.LOGIN](state) {
     state.logged = 1;
+    state.user = localStorage.getItem('user');
   },
   [types.LOGOUT](state) {
     state.logged = 0;
+    state.user = null;
   }
 };
 
