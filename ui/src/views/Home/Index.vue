@@ -16,7 +16,7 @@
                 Stop
             </b-button>
             <div>
-                <b-table striped hover :items="userTimeRecords"></b-table>
+                <b-table striped hover :items="userTimeRecords" :fields="fields"></b-table>
             </div>
         </div>
     </div>
@@ -28,6 +28,7 @@ export default {
     name: "Home",
     data() {
         return {
+            fields: [{key: 'task', label: 'Zadania'}, {key: 'startingTime', label: 'Czas rozpoczęcia'}, {key: 'endingTime', label: 'Czas zakończenia'}, {key: 'description', label: 'Opis'}],
             tasks: [],
             userTimeRecords: [],
             timeRecord: {
@@ -51,7 +52,14 @@ export default {
         },
         fetchUserTimeRecords(){
             this.$http.get(`${this.$serverUrl}/users/${JSON.parse(localStorage.getItem('user')).id}/time-records?startingDate=${new Date().toISOString().substring(0,10)}&endingDate=${new Date().toISOString().substring(0,10)}`)
-            .then((response) => {this.userTimeRecords = response.data; this.userTimeRecords.forEach(record=>{record.task = record.task.name}); console.log(this.userTimeRecords);})
+            .then((response) => {
+                this.userTimeRecords = response.data; 
+                this.userTimeRecords.forEach(record=>{
+                    record.task = record.task.name; 
+                    delete record.id; 
+                    record.startingTime = record.startingTime.substring(11,16); 
+                    record.endingTime = record.endingTime.substring(11,16)}); 
+                console.log(this.userTimeRecords);})
 
         },
         clickStart() {
