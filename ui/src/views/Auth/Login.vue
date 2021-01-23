@@ -41,8 +41,7 @@
                 this.$http.post(this.$serverUrl + '/login', this.credential)
                     .then((result) => {
                         if (result.status === 200) {
-                            localStorage.setItem('token', result.body.token);
-                            this.$store.dispatch('login', result.body.user);
+                            this.$store.dispatch('login', {token: result.body.token, user: result.body.user});
                         }
                     }, () => {
                         this.loginStatus = false

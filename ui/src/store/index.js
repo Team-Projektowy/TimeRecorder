@@ -20,14 +20,16 @@ const getters = {
 };
 
 const actions = {
-  login({ commit }, user) {
+  login({ commit }, params) {
     commit(types.LOGIN);
-    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('token', params.token);
+    localStorage.setItem('user', JSON.stringify(params.user));
     router.push({ path: '/' });
   },
 
   logout({ commit }) {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     commit(types.LOGOUT);
   }
 };
