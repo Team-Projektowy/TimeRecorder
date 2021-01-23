@@ -17,6 +17,14 @@ const ifAuthenticated = (to, from, next) => {
   }
 }
 
+const ifAdmin = (to, from, next) => {
+  if (store.getters.isLogged && store.getters.user.admin) {
+    next();
+  } else {
+    next("/error/403");
+  }
+}
+
 const routes = [
   {
     path: '/',
@@ -40,19 +48,13 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register,
-    beforeEnter: ifAuthenticated
+    beforeEnter: ifAdmin
   },
   {
     path: '/time-report',
     name: 'TimeReport',
     component: TimeReport,
-    beforeEnter: (to, from, next) => {
-      if (store.getters.isLogged && store.getters.user.admin) {
-        next();
-      } else {
-        next("/error/403");
-      }
-    }
+    beforeEnter: ifAdmin
   },
   {
     path: "/error/:code",

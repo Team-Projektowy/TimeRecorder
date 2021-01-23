@@ -62,9 +62,9 @@
 <!--                        <div class="text-danger" v-if="!$v.credential.hoursAWeek.maxValue">Liczba godzin tygodniowo nie może być większa niż 99</div>-->
 <!--                      </div>-->
 <!--                    </div>-->
-                <div class="mt-3 w-75">
+                <div class="mt-3 text-center">
                     <b-button @click="register" variant="outline-primary" block squared>Zarejestruj użytkownika</b-button>
-                    <p class="typo__p" v-if="submitStatus === 'ERROR'">Proszę wypełnić poprawnie.</p>
+                    <p class="mt-3 text-danger" v-if="submitStatus === 'ERROR'">Proszę wypełnić poprawnie.</p>
                 </div>
             </div>
     </div>

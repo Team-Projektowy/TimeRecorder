@@ -16,10 +16,9 @@
                           class="my-2">
             </b-form-input>
             <b-button id="loginButton" v-on:click="login" variant="outline-primary" block squared class="mt-3 mb-2">Zaloguj</b-button>
-            <div>
-                <label id="errorLogin" v-if="loginStatus === false"> Błąd logowania</label>
+            <div class="text-center">
+                <label class="text-danger" v-if="loginStatus === false"> Błąd logowania</label>
             </div>
-            <router-link to="/register" class="my-2">Zarejestruj się</router-link>
         </div>
     </div>
 </template>
@@ -43,8 +42,8 @@
                         if (result.status === 200) {
                             this.$store.dispatch('login', {token: result.body.token, user: result.body.user});
                         }
-                    }, () => {
-                        this.loginStatus = false
+                    }).catch(err => {
+                        this.loginStatus = false;
                     });
             },
             register() {
