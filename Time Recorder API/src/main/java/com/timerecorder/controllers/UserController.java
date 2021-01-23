@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @RestController
 @RequestMapping("users")
@@ -64,10 +65,10 @@ public class UserController {
             if (date == null) {
                 return timeRecordRepository.findAllByUserAndTask(user, task);
             }
-            return timeRecordRepository.findAllByUserAndTaskAndStartingDate(user, task, date);
+            return timeRecordRepository.findAllByUserAndTaskAndStartingTimeBetween(user, task, date.atStartOfDay(), date.atTime(LocalTime.MAX));
         }
 
-        return timeRecordRepository.findAllByUserAndStartingDate(user, date);
+        return timeRecordRepository.findAllByUserAndStartingTimeBetween(user, date.atStartOfDay(), date.atTime(LocalTime.MAX));
     }
 
     @GetMapping("/me/time-records")
@@ -101,9 +102,9 @@ public class UserController {
             if (date == null) {
                 return timeRecordRepository.findAllByUserAndTask(user, task);
             }
-            return timeRecordRepository.findAllByUserAndTaskAndStartingDate(user, task, date);
+            return timeRecordRepository.findAllByUserAndTaskAndStartingTimeBetween(user, task, date.atStartOfDay(), date.atTime(LocalTime.MAX));
         }
 
-        return timeRecordRepository.findAllByUserAndStartingDate(user, date);
+        return timeRecordRepository.findAllByUserAndStartingTimeBetween(user, date.atStartOfDay(), date.atTime(LocalTime.MAX));
     }
 }
