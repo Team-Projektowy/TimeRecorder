@@ -15,7 +15,9 @@
             <b-button variant="danger" v-on:click="clickStop" v-if="timeRecord.startingTime">
                 Stop
             </b-button>
-            
+            <div>
+                <b-table striped hover :items="userTimeRecords"></b-table>
+            </div>
         </div>
     </div>
 </template>
@@ -49,7 +51,7 @@ export default {
         },
         fetchUserTimeRecords(){
             this.$http.get(`${this.$serverUrl}/users/${JSON.parse(localStorage.getItem('user')).id}/time-records?startingDate=${new Date().toISOString().substring(0,10)}&endingDate=${new Date().toISOString().substring(0,10)}`)
-            .then((response) => {this.userTimeRecords = response.data; console.log(this.userTimeRecords);})
+            .then((response) => {this.userTimeRecords = response.data; this.userTimeRecords.forEach(record=>{record.task = record.task.name}); console.log(this.userTimeRecords);})
 
         },
         clickStart() {
