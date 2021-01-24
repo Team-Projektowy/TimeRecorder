@@ -52,7 +52,8 @@ public class TimeRecorderApiApplication {
         filterRegistrationBean.addUrlPatterns(
                 "/time-records/*",
                 "/users/*",
-                "/tasks/*"
+                "/tasks/*",
+                "/change-password"
         );
         return filterRegistrationBean;
     }

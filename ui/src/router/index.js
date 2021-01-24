@@ -11,6 +11,7 @@ import TaskEdit from "../views/Tasks/TaskEdit";
 import TaskCreate from "../views/Tasks/TaskCreate";
 import UsersAll from "../views/Users/UsersAll";
 import UserEdit from "../views/Users/UserEdit";
+import ChangePassword from "../views/Auth/ChangePassword";
 
 Vue.use(VueRouter)
 
@@ -48,6 +49,12 @@ const routes = [
         next(from);
       }
     }
+  },
+  {
+    path: '/change-password',
+    name: 'ChangePassword',
+    component: ChangePassword,
+    beforeEnter: ifAuthenticated,
   },
   {
     path: '/users',

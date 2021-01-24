@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.timerecorder.models.TokenAPI;
 import com.timerecorder.models.User;
 import com.timerecorder.repositories.UserRepository;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.core.env.Environment;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Date;
 
@@ -65,5 +67,26 @@ public class AuthController {
                 .compact();
 
         return new TokenAPI(token, user);
+    }
+
+    @PutMapping(path = "/change-password")
+    public void changePassword(@RequestBody ObjectNode json, HttpServletRequest request) {
+        String oldPassword = json.get("oldPassword").textValue();
+        String newPassword = json.get("newPassword").textValue();
+
+        Claims claims = (Claims) request.getAttribute("claims");
+        User user = userRepository.findById((Integer) claims.get("userId")).orElse(null);
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (!bCryptPasswordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect old password");
+        }
+
+        String hash = bCryptPasswordEncoder.encode(newPassword);
+        user.setPassword(hash);
+        userRepository.save(user);
     }
 }

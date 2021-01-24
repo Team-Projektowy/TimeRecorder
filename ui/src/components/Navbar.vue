@@ -10,6 +10,7 @@
           <b-nav-item v-if="user && user.admin" to="/time-report">Raport czasu</b-nav-item>
           <b-nav-item v-if="user && user.admin" to="/users">Konta użytkowników</b-nav-item>
           <b-nav-item v-if="user && user.admin" to="/tasks">Zadania</b-nav-item>
+          <b-nav-item v-if="isLogged" to="/change-password">Zmień hasło</b-nav-item>
           <b-nav-item v-if="isLogged" @click="logout">Wyloguj</b-nav-item>
         </b-navbar-nav>
       </b-collapse>

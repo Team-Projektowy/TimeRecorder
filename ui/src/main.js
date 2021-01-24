@@ -14,7 +14,8 @@ Vue.use(VueResource);
 Vue.use(Vuelidate);
 
 Vue.http.interceptors.push((request, next) => {
-  if (request.url.split("/").pop() === "login") {
+  const requestLastPart = request.url.split("/").pop();
+  if (requestLastPart === "login" || requestLastPart === "change-password") {
     next();
     return;
   }
