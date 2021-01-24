@@ -83,7 +83,7 @@
                     password: "",
                     position: "",
                     hoursAWeek: null,
-                    admin: false,
+                    admin: "false",
                 },
                 submitStatus: null
             }
