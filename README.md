@@ -1,4 +1,35 @@
-# Konfiguracja API:
-- Utworzyć plik application.properties z zawartością pliku application.properties.example i wypełnić pola w nawiasach klamrowych
-- Ja mam wersję Javy 11 - nie wiem czy zadziała ci na innej (chyba tak), jak coś to chyba stąd można pobrać: https://jdk.java.net/java-se-ri/11 i trzeba ustawić zmienną środowiskową JAVA_HOME
-- Uruchamianie komendą mvnv spring-boot:run
+# TimeRecorder
+> Application for recording tasks, based on Spring and Vue.js.
+
+## Table of contents
+
+## General info
+TimeRecorder is a student project for application servers. It has Java API build with Spring Framework as a backend and client application build with Vue.js.
+
+## Authors
+* [Blazej Tempski](https://github.com/jaheyy)
+* [Damian Goleniewski](https://github.com/dgoleniewski)
+
+## License
+Copyright (c) 2021 Błażej Tempski, Damian Goleniewski
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+
+## Technologies
+### API
+* Java 11.0.9,
+* Spring 3.4.2
+### Client
+* Vue.js 2.6.11,
+* Bootstrap-Vue 2.17.3,
+* Core-js 3.6.5,
+* Vuelidate 0.7.6,
+* Vue-router 3.2.0,
+* Vuex 3.4.0
+
+## Setup
+### API
+- Create file application.properties like application.properties.example and fill fields
+- Run with mvnv spring-boot:run
+### Client
+- Install node modules with npm install
+- Run with npm run serve
