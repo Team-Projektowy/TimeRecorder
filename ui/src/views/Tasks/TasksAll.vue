@@ -23,7 +23,6 @@ export default {
     this.$http.get(this.$serverUrl + "/tasks")
         .then(res => {
           this.tasks = res.body;
-          console.log(this.tasks);
         });
   },
 }

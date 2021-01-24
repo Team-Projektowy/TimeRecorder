@@ -2,13 +2,15 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home/Index'
 import Login from "../views/Auth/Login";
-import Register from "../views/Auth/Register";
+import Register from "../views/Users/Register";
 import store from '../store/index';
 import Error from "../views/Error/Error";
 import TimeReport from "../views/TimeReport";
 import TasksAll from "../views/Tasks/TasksAll";
 import TaskEdit from "../views/Tasks/TaskEdit";
 import TaskCreate from "../views/Tasks/TaskCreate";
+import UsersAll from "../views/Users/UsersAll";
+import UserEdit from "../views/Users/UserEdit";
 
 Vue.use(VueRouter)
 
@@ -48,9 +50,21 @@ const routes = [
     }
   },
   {
-    path: '/register',
+    path: '/users',
+    name: 'UsersAll',
+    component: UsersAll,
+    beforeEnter: ifAdmin
+  },
+  {
+    path: '/users/create',
     name: 'Register',
     component: Register,
+    beforeEnter: ifAdmin
+  },
+  {
+    path: '/users/:userId/edit',
+    name: 'UsersEdit',
+    component: UserEdit,
     beforeEnter: ifAdmin
   },
   {

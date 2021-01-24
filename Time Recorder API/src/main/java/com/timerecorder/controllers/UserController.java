@@ -1,8 +1,10 @@
 package com.timerecorder.controllers;
 
+import com.timerecorder.helpers.requestProcessingHelper;
 import com.timerecorder.models.Task;
 import com.timerecorder.models.TimeRecord;
 import com.timerecorder.models.User;
+import com.timerecorder.models.UserAPI;
 import com.timerecorder.repositories.TaskRepository;
 import com.timerecorder.repositories.TimeRecordRepository;
 import com.timerecorder.repositories.UserRepository;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("users")
@@ -32,8 +35,45 @@ public class UserController {
     }
 
     @GetMapping
-    public Iterable<User> getAll() {
+    public Iterable<User> getAll(HttpServletRequest request) {
+        requestProcessingHelper.throwUnauthorizedIfRequesterIsNotAdmin(request);
         return userRepository.findAll();
+    }
+
+    @GetMapping("/{userId}")
+    public User get(@PathVariable Integer userId, HttpServletRequest request) {
+        requestProcessingHelper.throwUnauthorizedIfRequesterIsNotAdmin(request);
+
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+        return user.get();
+    }
+
+    @PutMapping("/{userId}")
+    public User edit(@PathVariable Integer userId, @RequestBody UserAPI newUser, HttpServletRequest request) {
+        requestProcessingHelper.throwUnauthorizedIfRequesterIsNotAdmin(request);
+
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        user.setEmail(newUser.getEmail());
+        user.setFirstName(newUser.getFirstName());
+        user.setLastName(newUser.getLastName());
+        user.setPosition(newUser.getPosition());
+        user.setHoursAWeek(newUser.getHoursAWeek());
+        user.setAdmin(newUser.isAdmin());
+
+        return userRepository.save(user);
+    }
+
+    @DeleteMapping("/{userId}")
+    public void deleteUser(@PathVariable Integer userId, HttpServletRequest request) {
+        requestProcessingHelper.throwUnauthorizedIfRequesterIsNotAdmin(request);
+        userRepository.deleteById(userId);
     }
 
     @GetMapping("/{userId}/time-records")
@@ -42,12 +82,9 @@ public class UserController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startingDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endingDate,
             @RequestParam(required = false) Integer taskId,
-            HttpServletRequest httpServletRequest) {
+            HttpServletRequest request) {
 
-        Claims claims = (Claims) httpServletRequest.getAttribute("claims");
-        if (!claims.get("userId").equals(userId) && !(boolean) claims.get("isAdmin")) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You dont't have access to this resources");
-        }
+        requestProcessingHelper.throwUnauthorizedIfRequesterIsNotAdmin(request);
 
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {

@@ -51,7 +51,7 @@ export default {
             });
         },
         fetchUserTimeRecords(){
-            this.$http.get(`${this.$serverUrl}/users/${JSON.parse(localStorage.getItem('user')).id}/time-records?startingDate=${new Date().toISOString().substring(0,10)}&endingDate=${new Date().toISOString().substring(0,10)}`)
+            this.$http.get(`${this.$serverUrl}/users/me/time-records?startingDate=${new Date().toISOString().substring(0,10)}&endingDate=${new Date().toISOString().substring(0,10)}`)
             .then((response) => {
                 this.userTimeRecords = response.data; 
                 this.userTimeRecords.forEach(record=>{
@@ -59,8 +59,7 @@ export default {
                     delete record.id; 
                     record.startingTime = record.startingTime.substring(11,16); 
                     record.endingTime = record.endingTime.substring(11,16)}); 
-                console.log(this.userTimeRecords);})
-
+            })
         },
         clickStart() {
             if (this.timeRecord.taskId === null) {
@@ -73,17 +72,15 @@ export default {
         clickStop() {
             var currentTime = new Date().toISOString().replace("T", " ").substr(0, 19);
             this.timeRecord.endingTime = currentTime;
-            console.log(this.timeRecord);
             this.$http.post(this.$serverUrl + "/time-records", this.timeRecord)
                 .then((response) => {
-                    console.log(response);
                     this.timeRecord.startingTime = null;
                     this.timeRecord.endingTime = null;
                     this.timeRecord.description = "";
                     this.timeRecord.startingTime = null;
                     alert("Udało się zapisać");
                     this.fetchUserTimeRecords();
-                    })
+            })
         },
     },
     mounted() {

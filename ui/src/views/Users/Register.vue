@@ -132,10 +132,9 @@
                     this.$http.post(this.$serverUrl + '/register', this.credential)
                         .then(result => {
                           if (result.status === 200) {
-                              this.$router.push({ name: "Home" });
+                              this.$router.push({ name: "UsersAll" });
                           }
                         })
-                        .catch(err => console.log(err.message));
                 }
             },
         }
