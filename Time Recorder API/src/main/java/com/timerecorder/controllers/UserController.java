@@ -73,6 +73,9 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable Integer userId, HttpServletRequest request) {
         requestProcessingHelper.throwUnauthorizedIfRequesterIsNotAdmin(request);
+        User user = userRepository.findById(userId).orElse(null);
+        Iterable<TimeRecord> timeRecords = timeRecordRepository.findAllByUser(user);
+        timeRecordRepository.deleteAll(timeRecords);
         userRepository.deleteById(userId);
     }
 
