@@ -2,6 +2,12 @@
 > Application for recording tasks, based on Spring and Vue.js.
 
 ## Table of contents
+* [Authors](#authors)
+* [License](#license)
+* [Technologies](#technologies)
+* [Setup](#setup)
+* [Features](#features)
+* [Screenshots](#screenshots)
 
 ## General info
 TimeRecorder is a student project for application servers. It has Java API build with Spring Framework as a backend and client application build with Vue.js.
@@ -33,3 +39,20 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-NoDer
 ### Client
 - Install node modules with npm install
 - Run with npm run serve
+
+
+## Features
+List of ready features
+* Authentication
+* Saving time records with task information
+* Administrator can manage users
+* CRUD for time requests and tasks
+* Error handling
+
+## Screenshots
+<img src="/sc/1.png" width="600"/>
+<img src="/sc/2.png" width="600"/>
+<img src="/sc/3.png" width="600"/>
+<img src="/sc/4.png" width="600"/>
+<img src="/sc/5.png" width="600"/>
+<img src="/sc/6.png" width="600"/>
